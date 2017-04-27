@@ -282,13 +282,17 @@ public class CtrlActivity extends Activity {
                 }
                 if(mService!=null){
                     List<BluetoothGattService> dataList= mService.getBLEServices();
-                    Log.d(mTag,"dataList size:"+dataList.size());
-                    if(dataList.size()>=3){
-                        mIsRunFlag=false;
-                        for(BluetoothGattService bluetoothGattService:dataList){
-                            if(bluetoothGattService.getUuid().equals(UUID.fromString("00001523-1212-efde-1523-785feabcd123"))){
-                                mBCS=bluetoothGattService.getCharacteristic(UUID.fromString("00001525-1212-efde-1523-785feabcd123"));
-                                break;
+                    if(dataList!=null){
+                        Log.d(mTag,"dataList size:"+dataList.size());
+                        if(dataList.size()>=3){
+                            for(BluetoothGattService bluetoothGattService:dataList){
+                                if(bluetoothGattService.getUuid().equals(UUID.fromString("00001523-1212-efde-1523-785feabcd123"))){
+                                    mBCS=bluetoothGattService.getCharacteristic(UUID.fromString("00001525-1212-efde-1523-785feabcd123"));
+                                    if(mBCS!=null){
+                                        mIsRunFlag=false;
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
@@ -440,7 +444,7 @@ public class CtrlActivity extends Activity {
             @Override
             public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
                 mDeviceAddress=device.getAddress();
-                if(mDeviceAddress.equals(getStringById(R.string.bluetooth_address_str))){
+                if(mDeviceAddress.equals("CB:22:D9:E1:2D:52")){
                     stopScan();//搜索到设备后，立刻停止搜索
                     searchSuccessHdl();
                 }

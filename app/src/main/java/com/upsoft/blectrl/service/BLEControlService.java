@@ -11,7 +11,9 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -67,6 +69,7 @@ public class BLEControlService  extends Service {
         return mBinder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public boolean onUnbind(Intent intent) {
         close();
@@ -75,6 +78,7 @@ public class BLEControlService  extends Service {
 
     private final IBinder mBinder = new LocalBinder();
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public boolean initialize() {
         if (mBluetoothManager == null) {
             mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -93,6 +97,7 @@ public class BLEControlService  extends Service {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
             return false;
@@ -150,6 +155,7 @@ public class BLEControlService  extends Service {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void disconnect() {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
@@ -159,6 +165,7 @@ public class BLEControlService  extends Service {
         //mBluetoothGatt.close();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void close() {
         if (mBluetoothGatt == null) {
             return;
@@ -169,6 +176,7 @@ public class BLEControlService  extends Service {
         mBluetoothGatt = null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
@@ -177,6 +185,7 @@ public class BLEControlService  extends Service {
         mBluetoothGatt.readCharacteristic(characteristic);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void readDiscriptor(BluetoothGattDescriptor descriptor){
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
@@ -185,6 +194,7 @@ public class BLEControlService  extends Service {
         mBluetoothGatt.readDescriptor(descriptor);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void writeCharacteristic(BluetoothGattCharacteristic characteristic, byte[] value){
 
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
@@ -195,6 +205,7 @@ public class BLEControlService  extends Service {
         boolean status = mBluetoothGatt.writeCharacteristic(characteristic);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void readRemoteRssi(){
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
@@ -206,6 +217,7 @@ public class BLEControlService  extends Service {
     //*******************************************************************************************************
 
     //*******************************************************************************************************
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void enableTXNotification()
     {
         BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
@@ -228,6 +240,7 @@ public class BLEControlService  extends Service {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void writeRXCharacteristic(byte[] value)
     {
         BluetoothGattService RxService = null;
@@ -264,6 +277,7 @@ public class BLEControlService  extends Service {
 
     //****************************************************************************************************
     //test
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void getDisInfo(){
         BluetoothGattService disService = mBluetoothGatt.getService(DIS_UUID);
         if(disService == null){
@@ -278,22 +292,22 @@ public class BLEControlService  extends Service {
      * @param uuid
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public BluetoothGattService getBLEService(UUID uuid){
 
         BluetoothGattService disService = mBluetoothGatt.getService(uuid);
         return disService;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public List<BluetoothGattService> getBLEServices(){
-
         if(mBluetoothGatt == null){
-            Toast.makeText(this, "BluetoothGatt is null", Toast.LENGTH_SHORT).show();
             return null;
         }
-
         return mBluetoothGatt.getServices();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public boolean WriteBLECharacteristic(BluetoothGattService service, UUID characteristicUuid, byte[] value){
         BluetoothGattCharacteristic bluetoothGattCharacteristic = service.getCharacteristic(characteristicUuid);
         bluetoothGattCharacteristic.setValue(value);
@@ -305,6 +319,7 @@ public class BLEControlService  extends Service {
         Log.e(TAG, msg);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public List<BluetoothGattService> getSupportedGattServices() {
         if (mBluetoothGatt == null) return null;
 
@@ -316,6 +331,7 @@ public class BLEControlService  extends Service {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void broadcastUpdate(final String action, final BluetoothGattCharacteristic characteristic, String type) {
         final Intent intent = new Intent(action);
 
@@ -326,6 +342,7 @@ public class BLEControlService  extends Service {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void broadcastUpdate(final String action, final BluetoothGattDescriptor descriptor, String type) {
         final Intent intent = new Intent(action);
 
